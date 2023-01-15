@@ -1,0 +1,66 @@
+---
+import Layout from '../layouts/default.astro';
+---
+
+<style>
+  html,
+  body {
+    background: #111;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+  }
+
+  .container {
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .description {
+    max-width: 600px;
+    color: #fff;
+    font-size: 32px;
+    font-weight: bold;
+    text-align: center;
+    mix-blend-mode: difference;
+  }
+
+  .photo {
+    position: absolute;
+    max-width: 500px;
+    -webkit-mask-image: url('/img/mask.png');
+    -webkit-mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    animation: moving 3s infinite alternate ease-in-out;
+  }
+
+  @keyframes moving {
+    from {
+      transform: translate(20%, 0%);
+    }
+    to {
+      transform: translate(70%, 20%);
+    }
+  }
+</style>
+
+<Layout title="Blending">
+  <div class="container">
+    <img class="photo" src="/img/beach.jpg" alt="beach" />
+    <p class="description">
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed a maximus
+      felis. Cras a ipsum quam. Nulla varius aliquam eros, quis condimentum odio
+      pharetra luctus. Aliquam quis consectetur nisi, et pretium ante. Cras
+      egestas iaculis tortor quis volutpat. Suspendisse interdum, purus id
+      fermentum cursus, sapien ante congue sem, ut convallis libero enim et leo.
+      In volutpat nisi accumsan erat mollis volutpat.
+    </p>
+  </div>
+</Layout>
+
+<script></script>
