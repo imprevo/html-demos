@@ -1,0 +1,110 @@
+---
+import Layout from '../layouts/default.astro';
+---
+
+<style>
+  html,
+  body {
+    background: #111b3a;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+  }
+
+  .container {
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .wrapper {
+    position: relative;
+    max-width: 500px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .title {
+    position: absolute;
+    font-size: 48px;
+    font-weight: bold;
+    top: 34%;
+    left: 30%;
+    color: #e91e63;
+  }
+
+  .light {
+    fill: #ddd;
+    opacity: 0.1;
+  }
+
+  .moon {
+    fill: #ddd;
+  }
+
+  .hole {
+    fill: #aaa;
+  }
+
+  .clouds {
+    position: absolute;
+    top: 0;
+    left: 0;
+    mix-blend-mode: hard-light;
+  }
+
+  .cloud {
+    fill: #141d41;
+    width: 40px;
+    height: 6px;
+    rx: 3px;
+    ry: 3px;
+  }
+</style>
+
+<Layout title="Moon">
+  <div class="container">
+    <div class="wrapper">
+      <svg class="moon-wrapper" viewBox="0 0 100 100">
+        <circle class="light" cx="50" cy="50" r="50"></circle>
+        <circle class="light" cx="50" cy="50" r="45"></circle>
+        <circle class="light" cx="50" cy="50" r="40"></circle>
+        <circle class="light" cx="50" cy="50" r="35"></circle>
+        <circle class="light" cx="50" cy="50" r="30"></circle>
+
+        <circle class="moon" cx="50" cy="50" r="25"></circle>
+        <circle class="hole" cx="40" cy="40" r="5"></circle>
+        <circle class="hole" cx="60" cy="45" r="3"></circle>
+        <circle class="hole" cx="55" cy="35" r="3"></circle>
+      </svg>
+
+      <p class="title">imprevo</p>
+
+      <svg class="clouds" viewBox="0 0 100 100">
+        <rect class="cloud" x="15" y="50"></rect>
+        <rect class="cloud" x="20" y="55"></rect>
+        <rect class="cloud" x="10" y="60"></rect>
+        <rect class="cloud" x="15" y="65"></rect>
+      </svg>
+    </div>
+  </div>
+</Layout>
+
+<script>
+  const title = document.querySelector<HTMLElement>('.title')!;
+  const moon = document.querySelector<HTMLElement>('.moon-wrapper')!;
+  const clounds = document.querySelector<HTMLElement>('.clouds')!;
+
+  function moveClouds(node: HTMLElement, x: number, y: number, delta: number) {
+    node.style.transform = `translate(${x / delta}px, ${y / delta}px)`;
+  }
+
+  document.addEventListener('mousemove', (e) => {
+    moveClouds(title, e.clientX, e.clientY, 50);
+    moveClouds(moon, e.clientX, e.clientY, 100);
+    moveClouds(clounds, e.clientX, e.clientY, 20);
+  });
+</script>
