@@ -13,7 +13,8 @@ import Layout from '../layouts/default.astro';
   }
 
   .container {
-    height: 100%;
+    position: relative;
+    min-height: 100vh;
     padding: 0;
     margin: 0;
     display: flex;
@@ -39,6 +40,22 @@ import Layout from '../layouts/default.astro';
     animation: moving 3s infinite alternate ease-in-out;
   }
 
+  .figure {
+    position: absolute;
+    width: 500px;
+    max-width: 100%;
+    animation: scaling 3s infinite alternate
+      cubic-bezier(0.68, -0.55, 0.27, 1.55);
+  }
+
+  .button {
+    border: none;
+    background: #fff;
+    color: #000;
+    padding: 8px 16px;
+    font-size: 20px;
+  }
+
   @keyframes moving {
     from {
       transform: translate(20%, 0%);
@@ -47,18 +64,36 @@ import Layout from '../layouts/default.astro';
       transform: translate(70%, 20%);
     }
   }
+
+  @keyframes scaling {
+    from {
+      transform: scale(0);
+    }
+    to {
+      transform: scale(1);
+    }
+  }
 </style>
 
 <Layout title="Blending">
   <div class="container">
+    <div class="figure">
+      <svg viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="50" fill="#fff"></circle>
+      </svg>
+    </div>
     <img class="photo" src="/img/beach.jpg" alt="beach" />
     <p class="description">
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed a maximus
-      felis. Cras a ipsum quam. Nulla varius aliquam eros, quis condimentum odio
-      pharetra luctus. Aliquam quis consectetur nisi, et pretium ante. Cras
-      egestas iaculis tortor quis volutpat. Suspendisse interdum, purus id
-      fermentum cursus, sapien ante congue sem, ut convallis libero enim et leo.
-      In volutpat nisi accumsan erat mollis volutpat.
+      <button class="button">Press me!</button>
+      <br />
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed a maximus felis.
+      Cras a ipsum quam. Nulla varius aliquam eros, quis condimentum odio pharetra
+      luctus. Aliquam quis consectetur nisi, et pretium ante. Cras egestas iaculis
+      tortor quis volutpat. Suspendisse interdum, purus id fermentum cursus, sapien
+      ante congue sem, ut convallis libero enim et leo. In volutpat nisi accumsan
+      erat mollis volutpat.
+      <br />
+      <button class="button">Press me!</button>
     </p>
   </div>
 </Layout>
