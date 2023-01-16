@@ -1,0 +1,114 @@
+---
+import Layout from '../layouts/default.astro';
+---
+
+<style>
+  html,
+  body {
+    background: #111;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+  }
+
+  .container {
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .cat {
+    max-width: 500px;
+    width: 100%;
+  }
+
+  .line {
+    stroke: #fff;
+    stroke-width: 0.5;
+    fill: transparent;
+  }
+
+  .pupil {
+    transition: transform 0.1s ease-in-out;
+  }
+
+  .eyelid {
+    animation: 3s blinking ease-in-out infinite alternate;
+  }
+
+  @keyframes blinking {
+    0%,
+    96% {
+      transform: translate(0, 0);
+    }
+
+    100% {
+      transform: translate(0, 10px);
+    }
+  }
+</style>
+
+<Layout title="Cats">
+  <div class="container">
+    <svg class="cat" viewBox="0 0 100 100">
+      <g class="eyes">
+        <ellipse cx="40" cy="50" rx="5" ry="3" fill="#fff"></ellipse>
+        <g class="pupil">
+          <circle cx="40" cy="50" r="1" fill="#333"></circle>
+          <circle cx="40.3" cy="49.7" r="0.4" fill="#fff"></circle>
+        </g>
+        <ellipse class="eyelid" cx="40" cy="40" rx="8" ry="4" fill="#111"
+        ></ellipse>
+
+        <ellipse cx="60" cy="50" rx="5" ry="3" fill="#fff"></ellipse>
+        <g class="pupil">
+          <circle cx="60" cy="50" r="1" fill="#333"></circle>
+          <circle cx="60.3" cy="49.7" r="0.4" fill="#fff"></circle>
+        </g>
+        <ellipse class="eyelid" cx="60" cy="40" rx="8" ry="4" fill="#111"
+        ></ellipse>
+      </g>
+
+      <g class="ears">
+        <path class="line" d="M 27 40 Q 27 30 32 20 Q 32 20 37 30"></path>
+        <path class="line" d="M 73 40 Q 73 30 68 20 Q 68 20 63 30"></path>
+      </g>
+
+      <g class="nose">
+        <path class="line" d="M 40 60 Q 25 57 20 58"></path>
+        <path class="line" d="M 40 62 Q 25 61 19 63"></path>
+        <path class="line" d="M 40 64 Q 25 65 18 67"></path>
+
+        <path class="line" d="M 60 60 Q 75 57 80 58"></path>
+        <path class="line" d="M 60 62 Q 75 61 81 63"></path>
+        <path class="line" d="M 60 64 Q 75 65 82 67"></path>
+
+        <path class="line" d="M 45 64 C 45 65, 50 65, 50 59"></path>
+        <path class="line" d="M 50 59 C 50 65, 55 65, 55 64"></path>
+
+        <ellipse cx="50" cy="58" rx="3" ry="1" fill="#ffc0cb"></ellipse>
+      </g>
+    </svg>
+  </div>
+</Layout>
+
+<script>
+  const pupils = document.querySelectorAll<HTMLElement>('.pupil');
+
+  function movePupil(x: number, y: number) {
+    pupils.forEach((pupil) => {
+      pupil.style.transform = `translate(${x}px,${y}px)`;
+    });
+  }
+
+  document.addEventListener('mousemove', (e) => {
+    const delta = 5;
+    const x = e.clientX / window.innerWidth - 0.5;
+    const y = e.clientY / window.innerHeight - 0.5;
+
+    movePupil(x * delta, y * delta);
+  });
+</script>
