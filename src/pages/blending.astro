@@ -9,7 +9,8 @@ import Layout from '../layouts/default.astro';
     height: 100%;
     padding: 0;
     margin: 0;
-    overflow: hidden;
+    color: #fff;
+    overflow-x: hidden;
   }
 
   .container {
@@ -56,6 +57,39 @@ import Layout from '../layouts/default.astro';
     font-size: 20px;
   }
 
+  .text-bg-clip {
+    font-size: 100px;
+    font-weight: bold;
+    background: url(/img/beach.jpg) 0 0 / cover no-repeat;
+    background-attachment: fixed;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .filter-wrapper {
+    max-width: 500px;
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .filter {
+    width: 50%;
+    margin: 0;
+
+    &.a {
+      filter: invert(1) drop-shadow(1px 1px 10px red);
+    }
+    &.b {
+      filter: grayscale(1) contrast(2);
+    }
+    &.c {
+      filter: hue-rotate(90deg);
+    }
+    &.d {
+      animation: rotate-color 2s infinite alternate;
+    }
+  }
+
   @keyframes moving {
     from {
       transform: translate(20%, 0%);
@@ -71,6 +105,15 @@ import Layout from '../layouts/default.astro';
     }
     to {
       transform: scale(1);
+    }
+  }
+
+  @keyframes rotate-color {
+    from {
+      filter: hue-rotate(0deg) blur(0);
+    }
+    to {
+      filter: hue-rotate(360deg) blur(5px);
     }
   }
 </style>
@@ -95,6 +138,19 @@ import Layout from '../layouts/default.astro';
       <br />
       <button class="button">Press me!</button>
     </p>
+  </div>
+
+  <div class="container">
+    <p class="text-bg-clip">Hello, World!</p>
+  </div>
+
+  <div class="container">
+    <div class="filter-wrapper">
+      <img class="filter a" src="/img/beach.jpg" alt="beach" />
+      <img class="filter b" src="/img/beach.jpg" alt="beach" />
+      <img class="filter c" src="/img/beach.jpg" alt="beach" />
+      <img class="filter d" src="/img/beach.jpg" alt="beach" />
+    </div>
   </div>
 </Layout>
 
