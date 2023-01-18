@@ -1,5 +1,5 @@
 ---
-import Layout from '../layouts/default.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
 <style>
@@ -51,7 +51,7 @@ import Layout from '../layouts/default.astro';
   }
 </style>
 
-<Layout title="Cats">
+<BaseLayout title="Cats">
   <div class="container">
     <svg class="cat" viewBox="0 0 100 100">
       <g class="eyes">
@@ -93,7 +93,7 @@ import Layout from '../layouts/default.astro';
       </g>
     </svg>
   </div>
-</Layout>
+</BaseLayout>
 
 <script>
   const pupils = document.querySelectorAll<HTMLElement>('.pupil');

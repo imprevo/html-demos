@@ -1,5 +1,5 @@
 ---
-import Layout from '../layouts/default.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
 <style>
@@ -65,7 +65,7 @@ import Layout from '../layouts/default.astro';
   }
 </style>
 
-<Layout title="Moon">
+<BaseLayout title="Moon">
   <div class="container">
     <div class="wrapper">
       <svg class="moon-wrapper" viewBox="0 0 100 100">
@@ -91,7 +91,7 @@ import Layout from '../layouts/default.astro';
       </svg>
     </div>
   </div>
-</Layout>
+</BaseLayout>
 
 <script>
   const title = document.querySelector<HTMLElement>('.title')!;

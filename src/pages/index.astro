@@ -1,19 +1,23 @@
 ---
-import Layout from '../layouts/default.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const pages = [
+  { url: '/moon', name: 'Moon' },
+  { url: '/blending', name: 'Blending' },
+  { url: '/cats', name: 'Cats' },
+];
 ---
 
-<Layout title="Demos">
+<BaseLayout title="Demos">
   <h1>Demos</h1>
 
   <ul>
-    <li>
-      <a href="/moon">Moon</a>
-    </li>
-    <li>
-      <a href="/blending">Blending</a>
-    </li>
-    <li>
-      <a href="/cats">Cats</a>
-    </li>
+    {
+      pages.map((page) => (
+        <li>
+          <a href={page.url}>{page.name}</a>
+        </li>
+      ))
+    }
   </ul>
-</Layout>
+</BaseLayout>
