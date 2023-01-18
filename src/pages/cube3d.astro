@@ -1,0 +1,131 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<style>
+  html,
+  body {
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    background: #333;
+  }
+
+  .container {
+    min-height: 100vh;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .scene {
+    width: 200px;
+    height: 200px;
+    perspective: 600px;
+  }
+
+  .cube {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 1s ease-in-out;
+
+    &.front {
+      transform: rotateY(0deg);
+    }
+
+    &.back {
+      transform: rotateY(-180deg);
+    }
+
+    &.top {
+      transform: rotateX(-90deg);
+    }
+
+    &.bottom {
+      transform: rotateX(90deg);
+    }
+
+    &.left {
+      transform: rotateY(90deg);
+    }
+
+    &.right {
+      transform: rotateY(-90deg);
+    }
+  }
+
+  .cube-panel {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    color: #fff;
+    font-size: 64px;
+    opacity: 0.9;
+
+    &.front {
+      background: red;
+      transform: rotateY(0deg) translateZ(100px);
+    }
+
+    &.back {
+      background: blue;
+      transform: rotateY(180deg) translateZ(100px);
+    }
+
+    &.top {
+      background: aqua;
+      transform: rotateX(90deg) translateZ(100px);
+    }
+
+    &.bottom {
+      background: pink;
+      transform: rotateX(-90deg) translateZ(100px);
+    }
+
+    &.left {
+      background: green;
+      transform: rotateY(-90deg) translateZ(100px);
+    }
+
+    &.right {
+      background: purple;
+      transform: rotateY(90deg) translateZ(100px);
+    }
+  }
+</style>
+
+<BaseLayout title="3D">
+  <div class="container">
+    <div class="scene">
+      <div class="cube front">
+        <div class="cube-panel front">front</div>
+        <div class="cube-panel back">back</div>
+        <div class="cube-panel top">top</div>
+        <div class="cube-panel bottom">bottom</div>
+        <div class="cube-panel left">left</div>
+        <div class="cube-panel right">right</div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+  const cube = document.querySelector('.cube')!;
+  const positions = ['front', 'back', 'top', 'bottom', 'left', 'right'];
+  let positionIndex = 0;
+
+  function changePosition() {
+    cube.classList.remove(positions[positionIndex]);
+    positionIndex = (positionIndex + 1) % positions.length;
+    cube.classList.add(positions[positionIndex]);
+  }
+
+  setInterval(changePosition, 2000);
+</script>
