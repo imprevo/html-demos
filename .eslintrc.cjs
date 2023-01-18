@@ -5,7 +5,6 @@ module.exports = {
     node: true,
   },
   extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended'],
-  overrides: [],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 'latest',
@@ -13,4 +12,12 @@ module.exports = {
   },
   plugins: ['@typescript-eslint'],
   rules: {},
+  overrides: [
+    {
+      files: ['*.astro'],
+      extends: ['plugin:astro/recommended'],
+      parser: 'astro-eslint-parser',
+      rules: {},
+    },
+  ],
 };

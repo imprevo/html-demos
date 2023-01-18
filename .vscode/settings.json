@@ -1,3 +1,4 @@
 {
+  "eslint.validate": ["javascript", "typescript", "astro"],
   "stylelint.validate": ["css", "astro"]
 }
