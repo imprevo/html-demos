@@ -1,0 +1,81 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<style>
+  html,
+  body {
+    height: 100%;
+    background: radial-gradient(50% 50% at top center, rgb(0 0 0 / 70%), #222),
+      linear-gradient(180deg, #fff, #222) #222;
+  }
+
+  .container {
+    min-height: 100vh;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .text-wrapper {
+    max-width: 600px;
+    text-align: center;
+  }
+
+  .text {
+    font-size: 64px;
+    color: white;
+    animation: neon 1s ease-in-out infinite alternate;
+  }
+
+  .cursor {
+    position: fixed;
+    width: 200px;
+    height: 200px;
+    left: -100px;
+    top: -100px;
+    background: radial-gradient(circle at center, darkred 25%, red 100%);
+    border-radius: 100%;
+    mix-blend-mode: color-burn;
+    filter: blur(20px);
+    cursor: none;
+    transform: translate(50vw, 50vh);
+  }
+
+  @keyframes neon {
+    from {
+      text-shadow: 0 0 10px white, 0 0 20px white, 0 0 30px white, 0 0 40px red,
+        0 0 70px red, 0 0 80px red, 0 0 100px red, 0 0 150px red;
+    }
+
+    to {
+      text-shadow: 0 0 5px white, 0 0 10px white, 0 0 15px white, 0 0 20px red,
+        0 0 35px red, 0 0 40px red, 0 0 50px red, 0 0 75px red;
+    }
+  }
+</style>
+
+<BaseLayout title="Neon Text">
+  <div class="container">
+    <div class="text-wrapper">
+      <p class="text">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+      </p>
+    </div>
+    <div class="cursor"></div>
+  </div>
+</BaseLayout>
+
+<script>
+  const cursor = document.querySelector<HTMLElement>('.cursor')!;
+
+  function setCursor(x: number, y: number) {
+    cursor.style.transform = `translate(${x}px, ${y}px)`;
+  }
+
+  document.addEventListener('mousemove', (e) => {
+    setCursor(e.clientX, e.clientY);
+  });
+</script>
