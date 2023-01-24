@@ -1,0 +1,74 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<style>
+  html,
+  body {
+    background: #111;
+    height: 100%;
+    color: #fff;
+    overflow-x: hidden;
+  }
+
+  .container {
+    position: relative;
+    min-height: 100vh;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .photo-wrapper {
+    position: relative;
+    overflow: hidden;
+    line-height: 0;
+  }
+
+  .photo {
+    max-width: 90vw;
+    max-height: 90vh;
+  }
+
+  .overlay {
+    --offset: 50%;
+
+    position: absolute;
+    inset: 0;
+    background: white;
+    mix-blend-mode: exclusion;
+    transform: translate(var(--offset), 0);
+  }
+
+  .range {
+    width: 100%;
+  }
+</style>
+
+<BaseLayout title="Image diff">
+  <div class="container">
+    <div>
+      <div class="photo-wrapper">
+        <img class="photo" src="/img/beach.jpg" alt="" />
+        <div class="overlay"></div>
+      </div>
+      <input class="range" type="range" min="0" max="100" />
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+  const range = document.querySelector<HTMLInputElement>('.range')!;
+  const overlay = document.querySelector<HTMLElement>('.overlay')!;
+
+  function updateOverlay() {
+    const value = range.value;
+    overlay.style.setProperty('--offset', `${value}%`);
+  }
+
+  range.addEventListener('input', updateOverlay);
+
+  updateOverlay();
+</script>
