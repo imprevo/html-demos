@@ -11,7 +11,10 @@ module.exports = {
     sourceType: 'module',
   },
   plugins: ['@typescript-eslint'],
-  rules: {},
+  rules: {
+    'no-var': 'error',
+    'prefer-const': 'error',
+  },
   overrides: [
     {
       files: ['*.astro'],

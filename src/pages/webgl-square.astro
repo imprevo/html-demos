@@ -1,0 +1,223 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<style>
+  html,
+  body {
+    background: #111;
+    height: 100%;
+    color: #fff;
+    overflow-x: hidden;
+  }
+
+  .container {
+    position: relative;
+    min-height: 100vh;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+</style>
+
+<BaseLayout title="WebGL Square">
+  <div class="container">
+    <canvas class="canvas"></canvas>
+  </div>
+</BaseLayout>
+
+<script>
+  import { mat4 } from 'gl-matrix';
+  import {
+    clearScene,
+    getWebGLContext,
+    initPositionBuffer,
+    initShaderProgram,
+  } from '../utils/webgl';
+
+  const canvas = document.querySelector<HTMLCanvasElement>('.canvas')!;
+
+  function initSquare(): [number, number][] {
+    return [
+      [1, 1],
+      [-1, 1],
+      [1, -1],
+      [-1, -1],
+    ];
+  }
+
+  function initProjectionMatrix(gl: WebGLRenderingContext) {
+    // Create a perspective matrix, a special matrix that is
+    // used to simulate the distortion of perspective in a camera.
+    // Our field of view is 45 degrees, with a width/height
+    // ratio that matches the display size of the canvas
+    // and we only want to see objects between 0.1 units
+    // and 100 units away from the camera.
+    const matrix = mat4.create();
+
+    const fieldOfView = (45 * Math.PI) / 180; // in radians
+    const canvas = gl.canvas as HTMLCanvasElement;
+    const aspect = canvas.clientWidth / canvas.clientHeight;
+    const zNear = 0.1;
+    const zFar = 100.0;
+
+    mat4.perspective(matrix, fieldOfView, aspect, zNear, zFar);
+
+    return matrix;
+  }
+
+  function initModelViewMatrix() {
+    // Set the drawing position to the "identity" point, which is
+    // the center of the scene.
+
+    const matrix = mat4.create();
+
+    // Now move the drawing position a bit to where we want to
+    // start drawing the square.
+    mat4.translate(
+      matrix, // destination matrix
+      matrix, // matrix to translate
+      [0.5, 0.5, -5] // amount to translate
+    );
+
+    return matrix;
+  }
+
+  function getProgramInfo(gl: WebGLRenderingContext, program: WebGLProgram) {
+    return {
+      program,
+      attribLocations: {
+        vertexPosition: gl.getAttribLocation(program, 'aVertexPosition')!,
+      },
+      uniformLocations: {
+        projectionMatrix: gl.getUniformLocation(program, 'uProjectionMatrix')!,
+        modelViewMatrix: gl.getUniformLocation(program, 'uModelViewMatrix')!,
+        canvasSize: gl.getUniformLocation(program, 'uCanvasSize')!,
+        time: gl.getUniformLocation(program, 'uTime')!,
+      },
+      buffers: {
+        position: initPositionBuffer(gl, initSquare()),
+      },
+      matrices: {
+        projectionMatrix: initProjectionMatrix(gl),
+        modelViewMatrix: initModelViewMatrix(),
+      },
+    };
+  }
+
+  type ProgramInfo = ReturnType<typeof getProgramInfo>;
+
+  function setTime(gl: WebGLRenderingContext, programInfo: ProgramInfo) {
+    const time = performance.now() / 1000;
+    gl.uniform1f(programInfo.uniformLocations.time, time);
+  }
+
+  function draw(gl: WebGLRenderingContext) {
+    const offset = 0;
+    const vertexCount = 4;
+    gl.drawArrays(gl.TRIANGLE_STRIP, offset, vertexCount);
+  }
+
+  function initScene(gl: WebGLRenderingContext, programInfo: ProgramInfo) {
+    gl.useProgram(programInfo.program);
+
+    const canvas = gl.canvas as HTMLCanvasElement;
+    gl.uniform2f(
+      programInfo.uniformLocations.canvasSize,
+      canvas.clientWidth,
+      canvas.clientHeight
+    );
+
+    gl.uniformMatrix4fv(
+      programInfo.uniformLocations.projectionMatrix,
+      false,
+      programInfo.matrices.projectionMatrix
+    );
+    gl.uniformMatrix4fv(
+      programInfo.uniformLocations.modelViewMatrix,
+      false,
+      programInfo.matrices.modelViewMatrix
+    );
+
+    // Tell WebGL how to pull out the positions from the position
+    // buffer into the vertexPosition attribute.
+    const numComponents = 2; // pull out 2 values per iteration
+    const type = gl.FLOAT; // the data in the buffer is 32bit floats
+    const normalize = false; // don't normalize
+    const stride = 0; // how many bytes to get from one set of values to the next
+    // 0 = use type and numComponents above
+    const offset = 0; // how many bytes inside the buffer to start from
+    gl.bindBuffer(gl.ARRAY_BUFFER, programInfo.buffers.position);
+    gl.vertexAttribPointer(
+      programInfo.attribLocations.vertexPosition,
+      numComponents,
+      type,
+      normalize,
+      stride,
+      offset
+    );
+    gl.enableVertexAttribArray(programInfo.attribLocations.vertexPosition);
+  }
+
+  function main() {
+    const gl = getWebGLContext(canvas);
+
+    const vsSource = `
+      precision mediump float;
+
+      attribute vec4 aVertexPosition;
+
+      uniform mat4 uModelViewMatrix;
+      uniform mat4 uProjectionMatrix;
+      uniform float uTime;
+    
+      void main() {
+        vec4 offset = vec4(sin(uTime), cos(uTime), 0., abs(tan(uTime)));
+        gl_Position = uProjectionMatrix * uModelViewMatrix * aVertexPosition + offset;
+      }
+    `;
+
+    const fsSource = `
+      precision mediump float;
+
+      uniform float uTime;
+      uniform vec2 uCanvasSize;
+
+      vec2 rotate(vec2 v, float angle) {
+        float s = sin(angle);
+        float c = cos(angle);
+        mat2 m = mat2(c, -s, s, c);
+        return m * v;
+      }
+
+      void main() {
+        vec2 coord = gl_FragCoord.xy/uCanvasSize.xy;
+        coord = rotate(coord, uTime);
+        gl_FragColor = vec4(
+          coord.x,
+          coord.y,
+          1. - coord.x,
+          1.
+        );
+      }
+    `;
+
+    const shaderProgram = initShaderProgram(gl, vsSource, fsSource);
+    const programInfo = getProgramInfo(gl, shaderProgram);
+
+    initScene(gl, programInfo);
+
+    function loop() {
+      clearScene(gl);
+      setTime(gl, programInfo);
+      draw(gl);
+      requestAnimationFrame(loop);
+    }
+
+    requestAnimationFrame(loop);
+  }
+
+  main();
+</script>
